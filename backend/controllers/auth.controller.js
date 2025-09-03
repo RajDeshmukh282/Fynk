@@ -12,6 +12,9 @@ export const SignUp = async (req, res) => {
     if (findByUserName) {
       return res.status(400).json({ message: "Username already exist" });
     }
+    if(password.length < 6){
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
     const hashedPassword = await bycrypt.hash(password,10)//protect and hash password using bycrypt
     const user = await User.create({ name, username, email,password :hashedPassword });
 
