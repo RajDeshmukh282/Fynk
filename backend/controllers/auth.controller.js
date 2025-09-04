@@ -1,5 +1,9 @@
 // Importing the user model (mongoose schema) from models folder
-import User from "../models/user.model";
+import User from "../models/user.model.js";
+
+//import gentoken from 
+
+import genToken from "../config/token.js";
 
 // Importing bcryptjs for hashing and comparing passwords securely
 import bcrypt from "bcryptjs";
