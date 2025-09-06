@@ -15,7 +15,7 @@ const authRouter = express.Router(); // Create a router for auth routes
 // ---------------- ROUTES ---------------- //
 authRouter.post("/signup", SignUp);   // Route for user registration
 authRouter.post("/signin", Sign);     // Route for user login
-authRouter.post("/signout", SignOut); // Route for user logout
+authRouter.get("/signout", SignOut); // Route for user logout
 
 // Export the router (useful if this file is meant to be imported elsewhere)
 export default authRouter;

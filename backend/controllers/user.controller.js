@@ -1,3 +1,4 @@
+import User from "../models/user.model.js";
 // Controller to get details of the currently authenticated user
 export const getCurrentUser = async (req, res) => {
   try {

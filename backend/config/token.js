@@ -32,4 +32,6 @@ const genToken = async (userId) => {
 };
 
 // Exporting the function so other files can use it
-export default genToken;
+export default genToken; 
+
+
