@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import {
   AiOutlineUser,
@@ -16,7 +17,7 @@ const SignUp = () => {
 
   // Form state
   const [formData, setFormData] = useState({
-    name: "",       // ✅ changed from fullName → name
+    name: "", // ✅ changed from fullName → name
     username: "",
     email: "",
     password: "",
@@ -68,7 +69,7 @@ const SignUp = () => {
             <FiUser className="text-gray-600 mr-2 text-xl" />
             <input
               type="text"
-              name="name"   // ✅ now matches backend schema
+              name="name" // ✅ now matches backend schema
               value={formData.name}
               onChange={handleChange}
               placeholder="Full Name"
@@ -140,14 +141,17 @@ const SignUp = () => {
 
           {/* Links */}
           <div className="flex flex-col items-center gap-2 text-sm">
-            <a href="#" className="text-blue-600 hover:underline">
+            <Link
+              to="/forget-password"
+              className="text-blue-600 hover:underline"
+            >
               Forgot Password?
-            </a>
+            </Link>
             <p className="text-gray-600">
               Already have an account?{" "}
-              <a href="/signin" className="text-blue-600 hover:underline">
+              <Link to="/signin" className="text-blue-600 hover:underline">
                 Sign In
-              </a>
+              </Link>
             </p>
           </div>
         </form>
