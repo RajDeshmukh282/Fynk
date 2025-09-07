@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   AiOutlineUser,
   AiOutlineMail,
@@ -13,6 +14,33 @@ import logo from "../assets/logo.png";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  // Form state
+  const [formData, setFormData] = useState({
+    fullName: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      //  URL to your backend route
+      const res = await axios.post("http://localhost:5000/api/signup", formData);
+      console.log("✅ Signup Success:", res.data);
+      alert("Account created successfully!");
+    } catch (err) {
+      console.error("❌ Signup Error:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Error creating account!");
+    }
+  };
+
   return (
     <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center px-4">
       <motion.div
@@ -23,7 +51,10 @@ const SignUp = () => {
         className="w-[90%] lg:max-w-[60%] h-[650px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23] shadow-xl shadow-black/40"
       >
         {/* Left Form Section */}
-        <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-6 gap-6">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-6 gap-6"
+        >
           <h2 className="text-2xl font-bold text-gray-800 mt-4">
             Create Account
           </h2>
@@ -33,8 +64,12 @@ const SignUp = () => {
             <FiUser className="text-gray-600 mr-2 text-xl" />
             <input
               type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
               placeholder="Full Name"
               className="bg-transparent outline-none w-full text-gray-700"
+              required
             />
           </div>
 
@@ -43,8 +78,12 @@ const SignUp = () => {
             <AiOutlineUser className="text-gray-600 mr-2 text-xl" />
             <input
               type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               placeholder="Username"
               className="bg-transparent outline-none w-full text-gray-700"
+              required
             />
           </div>
 
@@ -53,8 +92,12 @@ const SignUp = () => {
             <AiOutlineMail className="text-gray-600 mr-2 text-xl" />
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Email"
               className="bg-transparent outline-none w-full text-gray-700"
+              required
             />
           </div>
 
@@ -63,8 +106,12 @@ const SignUp = () => {
             <AiOutlineLock className="text-gray-600 mr-2 text-xl" />
             <input
               type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="bg-transparent outline-none w-full text-gray-700"
+              required
             />
             <button
               type="button"
@@ -80,7 +127,10 @@ const SignUp = () => {
           </div>
 
           {/* Sign Up Button */}
-          <button className="w-full max-w-[320px] bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
+          <button
+            type="submit"
+            className="w-full max-w-[320px] bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition"
+          >
             Sign Up
           </button>
 
@@ -96,7 +146,7 @@ const SignUp = () => {
               </a>
             </p>
           </div>
-        </div>
+        </form>
 
         {/* Right Logo Section */}
         <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-6 text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black">
