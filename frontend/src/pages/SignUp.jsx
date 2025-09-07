@@ -16,7 +16,7 @@ const SignUp = () => {
 
   // Form state
   const [formData, setFormData] = useState({
-    fullName: "",
+    name: "",       // ✅ changed from fullName → name
     username: "",
     email: "",
     password: "",
@@ -31,8 +31,12 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //  URL to your backend route
-      const res = await axios.post("http://localhost:5000/api/signup", formData);
+      // Send directly to backend
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        formData,
+        { withCredentials: true } // optional if cookies/sessions used
+      );
       console.log("✅ Signup Success:", res.data);
       alert("Account created successfully!");
     } catch (err) {
@@ -59,13 +63,13 @@ const SignUp = () => {
             Create Account
           </h2>
 
-          {/* Full Name */}
+          {/* Name */}
           <div className="flex items-center w-full max-w-[320px] bg-gray-100 px-4 py-3 rounded-xl border border-gray-300 focus-within:border-black transition">
             <FiUser className="text-gray-600 mr-2 text-xl" />
             <input
               type="text"
-              name="fullName"
-              value={formData.fullName}
+              name="name"   // ✅ now matches backend schema
+              value={formData.name}
               onChange={handleChange}
               placeholder="Full Name"
               className="bg-transparent outline-none w-full text-gray-700"
@@ -153,9 +157,9 @@ const SignUp = () => {
           <motion.img
             src={logo}
             alt="Fynk"
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ repeat: Infinity, duration: 2, repeatType: "mirror" }}
+            initial={{ scale: 0.8, opacity: 0.8 }}
+            animate={{ scale: [1, 1.05, 1], opacity: [0.9, 1, 0.9] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
             className="w-40 drop-shadow-[0_0_20px_#ff0000] drop-shadow-[0_0_40px_#ff0000] drop-shadow-[0_0_60px_#ff0000]"
           />
           <p className="text-lg">Fynk | Where Stories Begin</p>
