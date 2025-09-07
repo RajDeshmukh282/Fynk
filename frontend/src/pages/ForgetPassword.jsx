@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import logo from "../assets/logo.png";
 
 const ForgetPassword = () => {
-  const [step, setStep] = useState(3); // 1=email, 2=OTP, 3=Reset
+  const [step, setStep] = useState(1); // Start at step 1
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -13,42 +13,75 @@ const ForgetPassword = () => {
     password: "",
   });
 
+  // State for loading and user feedback messages
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear message when user starts typing
+    if (message.text) {
+      setMessage({ type: "", text: "" });
+    }
   };
 
-  // Step handlers
+  // --- BACKEND LOGIC INTEGRATED ---
+
+  // Step 1: Handle sending the OTP
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
     try {
-      await axios.post("http://localhost:5000/api/auth/forgot-password", { email: formData.email });
-      alert("OTP sent to your email!");
+      // Corrected endpoint
+      await axios.post("http://localhost:5000/api/auth/send-otp", { email: formData.email });
+      setMessage({ type: "success", text: "OTP sent successfully!" });
       setStep(2);
     } catch (err) {
-      alert(err.response?.data?.message || "Error sending OTP");
+      setMessage({ type: "error", text: err.response?.data?.message || "Error sending OTP" });
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Step 2: Handle OTP verification
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
     try {
       await axios.post("http://localhost:5000/api/auth/verify-otp", { email: formData.email, otp: formData.otp });
-      alert("OTP verified!");
+      setMessage({ type: "success", text: "OTP verified successfully!" });
       setStep(3);
-    } catch (err) {
-      alert(err.response?.data?.message || "Invalid OTP");
+    } catch (err)
+    {
+      setMessage({ type: "error", text: err.response?.data?.message || "Invalid or expired OTP" });
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Step 3: Handle password reset
   const handleResetSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage({ type: "", text: "" });
     try {
       await axios.post("http://localhost:5000/api/auth/reset-password", { email: formData.email, password: formData.password });
-      alert("Password reset successfully!");
-      setStep(1);
-      setFormData({ email: "", otp: "", password: "" });
+      setMessage({ type: "success", text: "Password reset successfully! You can now log in." });
+      
+      // Reset form and state after a delay
+      setTimeout(() => {
+        setStep(1);
+        setFormData({ email: "", otp: "", password: "" });
+        setMessage({ type: "", text: "" });
+        // Optional: you could add a redirect to the login page here
+      }, 3000);
+
     } catch (err) {
-      alert(err.response?.data?.message || "Error resetting password");
+      setMessage({ type: "error", text: err.response?.data?.message || "Error resetting password" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,12 +92,12 @@ const ForgetPassword = () => {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: -40 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-[90%] lg:max-w-[60%] h-[500px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23] shadow-xl shadow-black/40"
+        className="w-[90%] lg:max-w-[60%] min-h-[500px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23] shadow-xl shadow-black/40"
       >
         {/* Left Form Section */}
         <form
           onSubmit={step === 1 ? handleEmailSubmit : step === 2 ? handleOtpSubmit : handleResetSubmit}
-          className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-6 gap-6"
+          className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center justify-center p-6 gap-6"
         >
           <h2 className="text-2xl font-bold text-gray-800 mt-4">
             {step === 1 ? "Forgot Password" : step === 2 ? "Enter OTP" : "Reset Password"}
@@ -120,12 +153,20 @@ const ForgetPassword = () => {
               </button>
             </div>
           )}
+          
+          {/* Message Display Area */}
+          {message.text && (
+            <div className={`w-full max-w-[320px] text-center text-sm p-2 rounded-md ${message.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                {message.text}
+            </div>
+          )}
 
           <button
             type="submit"
-            className="w-full max-w-[320px] bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition"
+            disabled={loading}
+            className="w-full max-w-[320px] bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition disabled:bg-gray-500 disabled:cursor-not-allowed"
           >
-            {step === 1 ? "Send OTP" : step === 2 ? "Verify OTP" : "Reset Password"}
+            {loading ? "Processing..." : (step === 1 ? "Send OTP" : step === 2 ? "Verify OTP" : "Reset Password")}
           </button>
         </form>
 
@@ -147,3 +188,4 @@ const ForgetPassword = () => {
 };
 
 export default ForgetPassword;
+
