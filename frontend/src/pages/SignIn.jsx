@@ -1,52 +1,73 @@
-import { FaUser, FaLock } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React from "react";
+import { AiOutlineUser, AiOutlineLock } from "react-icons/ai";
+import logo from "../assets/logo.png";
 
-export default function SignIn() {
+const SignIn = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800">
-      <div className="bg-white/10 backdrop-blur-lg p-10 rounded-2xl shadow-xl w-full max-w-2xl text-white">
-        <h2 className="text-4xl font-bold mb-4 text-center">Welcome Back</h2>
-        <p className="text-gray-300 mb-8 text-center text-lg">
-          Sign in to continue your journey.
-        </p>
+    <>
+      <div className="w-full h-screen bg-gradient-to-b from-black to-gray-900 flex flex-col justify-center items-center px-4">
+        <div className="w-[90%] lg:max-w-[60%] h-[500px] bg-white rounded-2xl flex justify-center items-center overflow-hidden border-2 border-[#1a1f23] shadow-xl shadow-black/40 transition-all duration-500 hover:scale-[1.01]">
+          
+          {/* Left Form Section */}
+          <div className="w-full lg:w-[50%] h-full bg-white flex flex-col items-center p-6 gap-6">
+            
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-gray-800 mt-6">
+              Sign In
+            </h2>
 
-        <form className="space-y-6">
-          <div className="relative">
-            <FaUser className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Username"
-              className="w-full pl-10 pr-3 py-3 rounded-lg bg-white/10 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+            {/* Username */}
+            <div className="flex items-center w-full max-w-[320px] bg-gray-100 px-4 py-3 rounded-xl border border-gray-300 focus-within:border-black transition">
+              <AiOutlineUser className="text-gray-600 mr-2 text-xl" />
+              <input
+                type="text"
+                placeholder="Username"
+                className="bg-transparent outline-none w-full text-gray-700"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="flex items-center w-full max-w-[320px] bg-gray-100 px-4 py-3 rounded-xl border border-gray-300 focus-within:border-black transition">
+              <AiOutlineLock className="text-gray-600 mr-2 text-xl" />
+              <input
+                type="password"
+                placeholder="Password"
+                className="bg-transparent outline-none w-full text-gray-700"
+              />
+            </div>
+
+            {/* Sign In Button */}
+            <button className="w-full max-w-[320px] bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
+              Sign In
+            </button>
+
+            {/* Links */}
+            <div className="flex flex-col items-center gap-2 text-sm">
+              <a href="#" className="text-blue-600 hover:underline">
+                Forgot Password?
+              </a>
+              <p className="text-gray-600">
+                Don’t have an account?{" "}
+                <a href="/signup" className="text-blue-600 hover:underline">
+                  Sign Up
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* Right Logo Section */}
+          <div className="md:w-[50%] h-full hidden lg:flex justify-center items-center bg-[#000000] flex-col gap-6 text-white text-[16px] font-semibold rounded-l-[30px] shadow-2xl shadow-black">
+            <img
+              src={logo}
+              alt="Fynk"
+              className="w-70 animate-pulse drop-shadow-lg"
             />
+            <p className="text-lg">Welcome Back to Fynk</p>
           </div>
-
-          <div className="relative">
-            <FaLock className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full pl-10 pr-3 py-3 rounded-lg bg-white/10 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
-            />
-          </div>
-
-          <div className="text-sm text-right">
-            <a href="#" className="text-blue-400 hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          <button className="w-full py-3 rounded-lg bg-blue-600 hover:bg-blue-700 transition text-lg font-semibold">
-            Sign In
-          </button>
-        </form>
-
-        <p className="mt-8 text-center text-gray-400 text-lg">
-          Don’t have an account?{" "}
-          <Link to="/signup" className="text-blue-400 hover:underline">
-            Sign Up
-          </Link>
-        </p>
+        </div>
       </div>
-    </div>
+    </>
   );
-}
+};
+
+export default SignIn;
